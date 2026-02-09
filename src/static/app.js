@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const activityInput = document.getElementById("activity");
   const closeRegistrationModal = document.querySelector(".close-modal");
 
+  // Announcement banner elements
+  const announcementBanner = document.getElementById("announcement-banner");
+  const closeBannerButton = document.getElementById("close-banner");
+
   // Search and filter elements
   const searchInput = document.getElementById("activity-search");
   const searchButton = document.getElementById("search-button");
@@ -50,6 +54,46 @@ document.addEventListener("DOMContentLoaded", () => {
     afternoon: { start: "15:00", end: "18:00" }, // After school hours
     weekend: { days: ["Saturday", "Sunday"] }, // Weekend days
   };
+
+  // Announcement Banner Functions
+  function initializeAnnouncementBanner() {
+    // Check if banner was previously dismissed
+    const bannerDismissed = localStorage.getItem('announcementBannerDismissed');
+    
+    if (bannerDismissed === 'true') {
+      announcementBanner.classList.add('hidden');
+    }
+  }
+
+  function closeBanner() {
+    announcementBanner.style.animation = 'slideUp 0.3s ease-out';
+    
+    setTimeout(() => {
+      announcementBanner.classList.add('hidden');
+      localStorage.setItem('announcementBannerDismissed', 'true');
+    }, 300);
+  }
+
+  // Add slideUp animation to CSS dynamically
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideUp {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Event listener for close banner button
+  if (closeBannerButton) {
+    closeBannerButton.addEventListener('click', closeBanner);
+  }
 
   // Initialize filters from active elements
   function initializeFilters() {
@@ -862,6 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Initialize app
+  initializeAnnouncementBanner();
   checkAuthentication();
   initializeFilters();
   fetchActivities();
